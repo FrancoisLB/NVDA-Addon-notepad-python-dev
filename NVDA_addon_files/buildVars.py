@@ -63,7 +63,7 @@ This module is designed to enhance productivity while working with Python code i
 For further details or contributions, please refer to the project's documentation.
    """),
 	# version
-	"addon_version": "2.7",
+	"addon_version": "0.9",
 	# Author(s)
 	"addon_author": "Youenn Daviaud, Mael Fer, Baptiste Picquart étudiants de l'ECAM Rennes en partenariat avec l'association My Human Kit <contact@myhumankit.org>",
 	# URL for the add-on documentation support
@@ -81,9 +81,9 @@ For further details or contributions, please refer to the project's documentatio
 	# Do not change unless you know what you are doing!
 	"addon_updateChannel": None,
 	# Add-on license such as GPL 2
-	"addon_license": "CC-BY SA",
+	"addon_license": "GNU General Public license (GPL) version 2",
 	# URL for the license document the ad-on is licensed under
-	"addon_licenseURL": "https://wiki.creativecommons.org/wiki/ShareAlike_compatibility",
+	"addon_licenseURL": "https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html",
 }
 
 # Define the python files that are the sources of your add-on.
