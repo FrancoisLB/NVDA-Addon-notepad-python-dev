@@ -63,19 +63,19 @@ This module is designed to enhance productivity while working with Python code i
 For further details or contributions, please refer to the project's documentation.
    """),
 	# version
-	"addon_version": "0.9",
+	"addon_version": "3.3",
 	# Author(s)
 	"addon_author": "Youenn Daviaud, Mael Fer, Baptiste Picquart étudiants de l'ECAM Rennes en partenariat avec l'association My Human Kit <contact@myhumankit.org>",
 	# URL for the add-on documentation support
 	"addon_url": None,
 	# URL for the add-on repository where the source code can be found
-	"addon_sourceURL": "https://github.com/FrancoisLB/NVDA-Addon-notepad-python-dev",
+	"addon_sourceURL": "https://github.com/FrancoisLB/NVDA_Notepad_plus_plus_for_python_nvda-addon",
 	# Documentation file name
 	"addon_docFileName": "readme.md",
 	# Minimum NVDA version supported (e.g. "2019.3.0", minor version is optional)
-	"addon_minimumNVDAVersion": "2021.1",
+	"addon_minimumNVDAVersion": "2025.1",
 	# Last NVDA version supported/tested (e.g. "2024.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2024.4.2",
+	"addon_lastTestedNVDAVersion": "2025.1",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!
@@ -107,7 +107,7 @@ excludedFiles = []
 # If your add-on is written in a language other than english, modify this variable.
 # For example, set baseLanguage to "es" if your add-on is primarily written in spanish.
 # You must also edit .gitignore file to specify base language files to be ignored.
-baseLanguage = "fr"
+baseLanguage = "fr-Fr"
 
 # Markdown extensions for add-on documentation
 # Most add-ons do not require additional Markdown extensions.

@@ -1,9 +1,9 @@
 # Appmodule NVDA for Notepad ++ (32 bit version only) 
 # adds shortcuts for python developpers 
-# 2025-03-15
+# 2025-06-07
 
 __version__ = "2.2" 
-__date__ = "2025/03/17" 
+__date__ = "2025/06/07" 
 
 import appModuleHandler
 import logging
@@ -16,6 +16,8 @@ import subprocess  # Pour lancer un terminal
 import os  # Pour manipuler les chemins de fichiers
 import keyboardHandler  # Pour simuler l'appui sur la touche Suppr
 import tempfile  # Pour créer des fichiers temporaires
+
+import re 
 
 # Configuration du logger
 log = logging.getLogger(__name__)
@@ -120,7 +122,9 @@ class AppModule(appModuleHandler.AppModule):
 
 
                     # Vérifier si la ligne commence par "def " (déclaration de fonction Python)
-                    if lineText.startswith("def "):
+                    # FLB 2025-06-07
+                    # if lineText.startswith("def "):
+                    if re.match(r"^\s*(async\s+)?def\s+", lineText):
                         # Déplacer le curseur au début de la ligne
                         caretInfo.updateCaret()
                         # FLB 1 : deplacement du curseur au niveau de def 
@@ -189,7 +193,9 @@ class AppModule(appModuleHandler.AppModule):
 
 
                     # Vérifier si la ligne commence par "def " (déclaration de fonction Python)
-                    if lineText.startswith("def "):
+                    # FLB 2025-06-07
+                    # if lineText.startswith("def "):
+                    if re.match(r"^\s*(async\s+)?def\s+", lineText):
                         # Déplacer le curseur au début de la ligne
                         caretInfo.updateCaret()
                         log.debug(f"Déclaration de fonction précédente trouvée : {lineText}")
@@ -352,6 +358,50 @@ class AppModule(appModuleHandler.AppModule):
     script_moveToPreviousClass.__doc__ = _("Déplace le curseur vers la première ligne de la déclaration de classe Python précédente.")
     script_moveToPreviousClass.category = "Notepad++"
 
+###
+    def script_jumpToMain(self, gesture):
+        """
+        Déplace le curseur vers la ligne contenant "if __name__ == '__main__':"
+        """
+        log.debug("Raccourci F8 détecté — recherche de if __name__ == '__main__'")
+
+        if self.edit:
+            try:
+                caretInfo = self.edit.makeTextInfo(textInfos.POSITION_CARET)
+                caretInfo.expand(textInfos.UNIT_LINE)
+                currentOffset = caretInfo.bookmark.startOffset
+
+                while True:
+                    caretInfo.move(textInfos.UNIT_LINE, 1)
+                    caretInfo.expand(textInfos.UNIT_LINE)
+                    lineText = caretInfo.text.strip()
+
+                    if lineText.startswith("if __name__") and "__main__" in lineText:
+                        caretOffset = len(caretInfo.text) - len(caretInfo.text.lstrip(' '))
+                        caretInfo.move(textInfos.UNIT_CHARACTER, caretOffset)
+                        caretInfo.updateCaret()
+                        log.debug("Ligne principale trouvée : " + lineText)
+                        speech.speakMessage("Bloc principal trouvé.")
+                        return
+
+                    # Fin du document atteinte
+                    if caretInfo.bookmark.startOffset <= currentOffset:
+                        break
+                    currentOffset = caretInfo.bookmark.startOffset
+
+                log.debug("Ligne if __name__ == '__main__': non trouvée.")
+                speech.speakMessage("Ligne if name égal main non trouvée.")
+
+            except Exception as e:
+                log.error(f"Erreur lors de la recherche de la ligne main : {e}")
+                speech.speakMessage("Erreur lors de la recherche.")
+        else:
+            log.debug("Aucun objet d'édition trouvé.")
+
+    script_jumpToMain.__doc__ = _("Déplace le curseur vers la ligne principale if __name__ == '__main__'")
+    script_jumpToMain.category = "Notepad++"
+
+###
 
     def script_selectCurrentClass(self, gesture):
         """
@@ -498,7 +548,9 @@ class AppModule(appModuleHandler.AppModule):
                 currentLineText = caretInfo.text.strip()  # Obtenir le texte de la ligne actuelle
 
                 # Vérifier si la ligne actuelle contient une déclaration de fonction
-                if currentLineText.startswith("def "):
+                # FLB 2025-06-07 
+                # if currentLineText.startswith("def "):
+                if re.match(r"^\s*(async\s+)?def\s+", currentLineText):
                     # Si c'est le cas, on commence la sélection à partir de cette ligne
                     startInfo = caretInfo.copy()
                     startIndentation = self._getIndentationLevel(currentLineText)
@@ -509,7 +561,9 @@ class AppModule(appModuleHandler.AppModule):
                         caretInfo.expand(textInfos.UNIT_LINE)
                         lineText = caretInfo.text.strip()
 
-                        if lineText.startswith("def "):
+                        # FLB 2025-06-07
+                        # if lineText.startswith("def "):
+                        if re.match(r"^\s*(async\s+)?def\s+", lineText):
                             startInfo = caretInfo.copy()
                             startIndentation = self._getIndentationLevel(lineText)
                             break
@@ -583,7 +637,9 @@ class AppModule(appModuleHandler.AppModule):
 
 
                 # Vérifier si la ligne commence par "def " (déclaration de fonction Python)
-                if lineText.startswith("def "):
+                # FLB 2025-06-07 
+                # if lineText.startswith("def "):
+                if re.match(r"^\s*(async\s+)?def\s+", lineText):
                     self._selectFunction(caretInfo)
                     log.debug("Fonction sélectionnée avec succès.")
                     speech.speakMessage("Fonction sélectionnée.")
@@ -863,7 +919,9 @@ class AppModule(appModuleHandler.AppModule):
                 currentLineText = caretInfo.text.strip()  # Obtenir le texte de la ligne actuelle
 
                 # Vérifier si la ligne actuelle contient une déclaration de fonction
-                if currentLineText.startswith("def "):
+                # FLB 2025-06-07
+                # if currentLineText.startswith("def "):
+                if re.match(r"^\s*(async\s+)?def\s+", currentLineText):
                     # Si c'est le cas, on commence la suppression à partir de cette ligne
                     startInfo = caretInfo.copy()
                     startIndentation = self._getIndentationLevel(currentLineText)
@@ -874,7 +932,9 @@ class AppModule(appModuleHandler.AppModule):
                         caretInfo.expand(textInfos.UNIT_LINE)
                         lineText = caretInfo.text.strip()
 
-                        if lineText.startswith("def "):
+                        # FLB 2025-06-07
+                        # if lineText.startswith("def "):
+                        if re.match(r"^\s*(async\s+)?def\s+", lineText):
                             startInfo = caretInfo.copy()
                             startIndentation = self._getIndentationLevel(lineText)
                             break
@@ -1173,6 +1233,10 @@ class AppModule(appModuleHandler.AppModule):
                     else:
                         break
 
+                # FLB : moveToNextIndentedLine 
+                caretInfo.move(textInfos.UNIT_CHARACTER, currentIndent)
+                caretInfo.updateCaret()
+                
                 # Annoncer le niveau d'indentation actuel
                 speech.speakMessage(f"Indentation actuel : {currentIndent}")
 
@@ -1199,6 +1263,8 @@ class AppModule(appModuleHandler.AppModule):
                     # Vérifier si l'indentation est égale à l'actuelle
                     if lineIndent == currentIndent:
                         # Déplacer le curseur au début de la ligne
+                        # FLB : moveToNextIndentedLine 
+                        caretInfo.move(textInfos.UNIT_CHARACTER, currentIndent)
                         caretInfo.updateCaret()
                         log.debug(f"Ligne suivante avec le même niveau d'indentation trouvée : {lineText.strip()}")
                         speech.speakMessage(f"Ligne suivante avec le même niveau d'indentation trouvée : {lineText.strip()}")
@@ -1207,7 +1273,7 @@ class AppModule(appModuleHandler.AppModule):
                     # Si on atteint la fin du document, arrêter la recherche
                     if caretInfo.bookmark.startOffset <= currentLine:
                         log.debug("Aucune ligne suivante avec le même niveau d'indentation trouvée.")
-                        speech.speakMessage("Fin du document atteinte.")
+                        speech.speakMessage("Fin du document.")
                         break
 
                     # Mettre à jour la position actuelle pour éviter les boucles infinies
@@ -1276,15 +1342,17 @@ class AppModule(appModuleHandler.AppModule):
                     # Vérifier si l'indentation est égale à l'actuelle
                     if lineIndent == currentIndent:
                         # Déplacer le curseur au début de la ligne
+                        # FLB : moveToNextIndentedLine 
+                        caretInfo.move(textInfos.UNIT_CHARACTER, currentIndent)
                         caretInfo.updateCaret()
                         log.debug(f"Ligne précédente avec le même niveau d'indentation trouvée : {lineText.strip()}")
-                        speech.speakMessage(f"Ligne précédente avec le même niveau d'indentation trouvée : {lineText.strip()}")
+                        speech.speakMessage(f"Même niveau d'indentation : {lineText.strip()}")
                         break
 
                     # Si on atteint le début du document, arrêter la recherche
                     if caretInfo.bookmark.startOffset >= currentLine:
                         log.debug("Aucune ligne précédente avec le même niveau d'indentation trouvée.")
-                        speech.speakMessage("Début du document atteint.")
+                        speech.speakMessage("Début du document.")
                         break
 
                     # Mettre à jour la position actuelle pour éviter les boucles infinies
@@ -1523,6 +1591,7 @@ class AppModule(appModuleHandler.AppModule):
     "kb:Shift+F2": "moveToPreviousFunction",
     "kb:F7": "moveToNextClass",
     "kb:Shift+F7": "moveToPreviousClass",
+    "kb:F8": "jumpToMain",
     "kb:control+shift+r": "selectCurrentClass",
     "kb:control+r": "selectCurrentFunction",
     "kb:control+shift+delete": "deleteCurrentClass",
