@@ -30,11 +30,14 @@ This NVDA APP module helps to interact with Notepad++ for python development. It
 
 ## Keyboard Shortcuts ##
 
-### Navigation ###
+### Navigation by class, methode or function, and in __main__ bloc ###
 - **F2**: Move the cursor to the next function declaration  
 - **Shift+F2**: Move the cursor to the previous function declaration  
 - **F7**: Move the cursor to the next class declaration  
 - **Shift+F7**: Move the cursor to the previous class declaration  
+- **F8**: Move the cursor to the next __main__ bloc if exists 
+
+### Navigation by indentation level ###
 - **Alt+DownArrow**: Move the cursor to the next indentation level  
 - **Alt+UpArrow**: Move the cursor to the previous indentation level  
 - **Control+Alt+DownArrow**: Move the cursor to the next line with the same indentation level  

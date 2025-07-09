@@ -1,1 +1,3 @@
-Use this file to explain what has changed in your add-on since the previous release. This will be included automatically in the release description when used with GitHub actions.
+this new version integrates following changes :
+* Fix : navigation by methods and function now works also with async declaration 
+* Add : F8 shortcut to set the focus directly in the "__main__" bloc of code, if exists 
